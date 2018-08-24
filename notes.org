@@ -1,0 +1,89 @@
+* Good TIPS
+  - Versions of packages: specify them: It's a good idea to specify an
+    exact version whenever you manage packages with Puppet, so that
+    all nodes get the same version of a given package. Otherwise, if
+    you use ensure => installed , they will just get whatever version
+    was current at the time they were built, leading to a situation
+    where different nodes have different package versions.  When a
+    newer version of the package is released, and you decide it's time
+    to upgrade to it, you can update the version string specified in
+    the Puppet manifest and Puppet will upgrade the package
+    everywhere.
+  - install Ruby gems for you using the provider => gem attribute
+  - puppet lint: a gem for puppet do delint.
+    #+BEGIN_SRC ruby
+      package { 'puppet-lint':
+        ensure   => installed,
+        provider => puppet_gem,
+      }
+    #+END_SRC
+  - for older services, use pattern matching with the process table to
+    ensure they're running, rather than the defaut check with `systemctl`:
+    #+BEGIN_SRC ruby
+      service { 'ntp':
+        ensure  => running,
+        enable => true,
+        hasstatus => false,
+        pattern => 'ntpd',
+      }
+    #+END_SRC
+  - Alwys specify a UID for a user in the puppet manifest, to ensure
+    constency between nodes.
+  - OMG, authorized keys! Across systems!
+    #+BEGIN_SRC sh
+      ssh_authorized_key { 'john@bitfieldconsulting.com':
+                           user => 'vagrant',
+                           type => 'ssh-rsa',
+                           key =>
+      'AAAAB3NzaC1yc2EAAAABIwAAAIEA3ATqENg+GWACa2BzeqTdGnJhNoBer8x6pfWkzNzeM8Zx7/2Tf2p
+      l7kHdbsiTXEUawqzXZQtZzt/j3Oya+PZjcRpWNRzprSmd2UxEEPTqDw9LqY5S2B8og/NyzWaIYPsKoat
+      cgC7VgYHplcTbzEhGu8BsoEVBGYu3IRy5RkAcZik=',
+      }
+    #+END_SRC
+  - now that you know what the `exec` resourse does, don't do it!
+  - Puppet $variables begin with a $dollar $sign _or _an _underscore
+  - notice() has no effect on the system, but prints out the value of
+    its argument. Useful for debugging.
+  - $variables can be ${interpolated}
+  - arrays of resources:
+    #+BEGIN_SRC ruby
+      $dependencies =[
+        'php7.bullshit',
+        'php.more.bullshit'
+      ]
+
+      package {$dependencies:
+        ensure => installed,
+      }
+      #+END_SRC
+  - use trailing commas in Puppet hashes
+  - attribute hashes and the attribute splat operator:
+    #+BEGIN_SRC ruby
+      #If you have this:
+      $attributes = {
+        'owner' => 'vagrant',
+        'group' => 'vagrant',
+        'mode'  => '0644', #Notice, trailing comma
+      }
+
+      #Then this:
+      file { '/tmp/test':
+        ensure => present,
+        ,* => $attributes,
+      }
+
+      #Is the same as this:
+      file {'tmp/test':
+        ensure => present,
+        owner => 'vagrant',
+        group => 'vagrant',
+        mode => '0644',
+      }
+    #+END_SRC
+  - Regular expressions with the ~= operator are just Ruby regexps
+  - operating system major release is a very handy fact, one you'll
+    use often:  $facts['os']['release']['major']
+  - better way of making decisions based on facts in your manifests is
+    to use Hiera
+  - 
+* 
