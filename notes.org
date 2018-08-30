@@ -85,5 +85,29 @@
     use often:  $facts['os']['release']['major']
   - better way of making decisions based on facts in your manifests is
     to use Hiera
+  - use facts:
+    #+BEGIN_SRC ruby
+      ## Have the key-value pair cloud=aws in
+      ## /opt/puppetlabs/facter/facts.d/some_fact_file.txt
+      ## then:
+
+      case $facts['cloud'] {
+          'aws': {
+                    notice('This is an AWS cloud server')
+                  }
+          'gcp': {
+                    notice('This is a Google could server')
+                  }
+          default: {
+            notice("I'm not sure which cloud I'm in!")
+          }
+        }
+    #+END_SRC
+  - facts can be executable. +x on a fact file makes it a script that
+    runs every time Puppet runs. So consider cron jobs first.
+  - Hiera is a way to seperate configuration data from Puppet code. Use
+    it, but don't over-use it.
+  - hiera-eyaml-gpg, a Hiera pugin, stores secrets in Hiera
   - 
+    
 * 
