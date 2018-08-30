@@ -108,6 +108,11 @@
   - Hiera is a way to seperate configuration data from Puppet code. Use
     it, but don't over-use it.
   - hiera-eyaml-gpg, a Hiera pugin, stores secrets in Hiera
+  - classes: on their own do nothig: declare a grouping of resources
+    that can be applied.
+  - Limit the size of the strings passed in as parameters with String[min, max]
+  - Classes: one per node.  Defined resource types: as many as
+    needed. But functionally, they're the same.
   - 
     
 * 
