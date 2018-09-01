@@ -113,6 +113,19 @@
   - Limit the size of the strings passed in as parameters with String[min, max]
   - Classes: one per node.  Defined resource types: as many as
     needed. But functionally, they're the same.
-  - 
+  - A profile encapsulates some specific piece of software or
+    functionality which is required for a role.
+    #+BEGIN_SRC ruby
+      ## file: role_app_server_profiles.pp
+
+      #Be an app server
+      class role::app_server {
+              include profile::postgresql
+              include profile::apache
+              include profile::java
+              include profile::tomcat
+              include profile::my_app
+            }
+    #+END_SRC
     
 * 
